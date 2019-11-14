@@ -28,34 +28,40 @@ def addtask(task):
 
 @app.route('/editask/<t_id>/<edit>')
 def editask(t_id, edit):
-    model.edit_task(t_id, edit)
-    task_edit = {"my_id": t_id}
-    return render_template("edit_t.html", tsk=task_edit)
-
+    t = model.edit_task(t_id, edit)
+    if t:
+        task_edit = {"my_id": t_id}
+        return render_template("edit_t.html", tsk=task_edit)
+    return "The task doesn't exist"
 
 @app.route('/getask/<num>')
 def getask(num):
     t = model.get_task(num)
-    tsk = {'data': t.tsk, 'my_id': t.my_id, 'time': t.t}
-    return render_template("get_t.html", tsk=tsk)
+    if t:
+        tsk = {'data': t.tsk, 'my_id': t.my_id, 'time': t.t}
+        return render_template("get_t.html", tsk=tsk)
+    return "The task doesn't exist"
 
 
 @app.route('/getalltasks')
 def getalltasks():
     tasks = model.get_all_tasks()
-    tsks = []
-    for t in tasks:
-        tsk = {'my_id': t['my_id'], 'data': t['task']}
-        tsks.append(tsk)
-    return render_template("get_all_t.html", tsks=tsks)
-
+    if tasks:
+        tsks = []
+        for t in tasks:
+            tsk = {'my_id': t['my_id'], 'data': t['task']}
+            tsks.append(tsk)
+        return render_template("get_all_t.html", tsks=tsks)
+    return "No tasks exist"
 
 @app.route('/deletask/<num>')
 def deletask(num):
     # returns bool
     t = model.remove_task(num)
-    t_delete = {'my_id': num}
-    return render_template("delete_t.html", tsk=t_delete)
+    if t:
+        t_delete = {'my_id': num}
+        return render_template("delete_t.html", tsk=t_delete)
+    return "The task doesn't exist"
 
 
 @app.route('/delall')

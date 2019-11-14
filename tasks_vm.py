@@ -38,6 +38,7 @@ class TasksVm:
         # calling add_task from model
         self.model.add_task(task.my_id, task_str)
         print("task", t_id, "added at", task.t)
+        return task
 
     # editing existing task if exists
     def edit_t(self):
